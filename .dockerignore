@@ -1,0 +1,14 @@
+node_modules
+data
+.env
+.env.*
+!.env.example
+dist
+.git
+.openai
+*.tsbuildinfo
+*.log
+outputs
+work
+backups
+server/node_modules
