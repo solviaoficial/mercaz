@@ -41,8 +41,10 @@ import {
 import { StoreCard, ReviewList } from './catalog';
 export function AuthPage() {
   const app = useApp(),
-    [mode, setMode] = useState('login');
-  if (app.data.user)
+    [mode, setMode] = useState(new URLSearchParams(location.search).get('mode') === 'reset' ? 'reset' : 'login'),
+    [notice, setNotice] = useState(new URLSearchParams(location.search).has('auth_error') ? 'O link expirou ou o login foi cancelado. Tente novamente.' : '');
+  const managed = app.data.config.authProvider === 'supabase';
+  if (app.data.user && mode !== 'reset')
     return (
       <EmptyState
         title={'Olá, ' + app.data.user.name.split(' ')[0]}
@@ -67,10 +69,11 @@ export function AuthPage() {
       </div>
       <div className="panel authform">
         <Heading
-          title={mode === 'login' ? 'Entre na Mercaz' : 'Crie sua conta'}
+          title={mode === 'login' ? 'Entre na Mercaz' : mode === 'register' ? 'Crie sua conta' : mode === 'recover' ? 'Recuperar acesso' : 'Escolha uma nova senha'}
           sub="Uma conta para comprar e vender."
         />
-        <Tabs value={mode} onValueChange={(v) => setMode(String(v))}>
+        {notice && <div className="notice" role="status">{notice}</div>}
+        <Tabs value={mode} onValueChange={(v) => { setMode(String(v)); setNotice(''); }}>
           <TabsList>
             <TabsTrigger value="login">Entrar</TabsTrigger>
             <TabsTrigger value="register">Criar conta</TabsTrigger>
@@ -78,13 +81,23 @@ export function AuthPage() {
         </Tabs>
         <ActionForm
           key={mode}
-          button={mode === 'login' ? 'Entrar' : 'Criar minha conta'}
+          button={mode === 'login' ? 'Entrar' : mode === 'register' ? 'Criar minha conta' : mode === 'recover' ? 'Enviar link de recuperação' : 'Salvar nova senha'}
           onSubmit={async (f: FormData) => {
-            await api('/auth/' + mode, 'POST', Object.fromEntries(f));
+            const result = await api('/auth/' + mode, 'POST', Object.fromEntries(f));
+            if (result.confirmationRequired || mode === 'recover') {
+              setNotice(result.message);
+              return;
+            }
+            if (mode === 'reset') {
+              await app.refresh();
+              setMode('login');
+              setNotice('Senha alterada. Entre com sua nova senha.');
+              return;
+            }
             await app.refresh();
             const next = new URLSearchParams(location.search).get('next');
             go(
-              next && next.startsWith('/') && !next.startsWith('//')
+              next && next.startsWith('/') && !next.startsWith('//') && !/[\\\r\n]/.test(next)
                 ? next
                 : '/conta',
             );
@@ -100,24 +113,24 @@ export function AuthPage() {
               autoComplete="name"
             />
           )}
-          <Field
+          {mode !== 'reset' && <Field
             label="E-mail"
             name="email"
             type="email"
             required
             autoComplete="email"
-          />
-          <Field
+          />}
+          {mode !== 'recover' && <Field
             label="Senha"
             name="password"
             type="password"
             required
-            minLength={mode === 'register' ? 12 : 1}
+            minLength={mode === 'login' ? 1 : 12}
             maxLength={128}
             autoComplete={
-              mode === 'register' ? 'new-password' : 'current-password'
+              mode === 'login' ? 'current-password' : 'new-password'
             }
-          />
+          />}
           {mode === 'register' && (
             <p className="small muted">
               Use pelo menos 12 caracteres. Ao criar sua conta, você aceita os{' '}
@@ -126,6 +139,12 @@ export function AuthPage() {
             </p>
           )}
         </ActionForm>
+        {managed && mode === 'login' && <button className="inline-link" onClick={() => {setMode('recover'); setNotice('');}}>Esqueci minha senha</button>}
+        {app.data.config.googleAuth && ['login','register'].includes(mode) && (
+          <a className="btn secondary" style={{width:'100%',marginTop:20}} href={'/api/auth/google?next='+encodeURIComponent(new URLSearchParams(location.search).get('next') || '/conta')}>
+            Continuar com Google
+          </a>
+        )}
         {app.data.config.seedDemo && (
           <div className="notice">
             Ambiente de demonstração. As contas de teste e a senha de acesso
@@ -867,16 +886,17 @@ function AccountContent() {
             <ActionForm
               button="Alterar senha"
               onSubmit={async (f: FormData) => {
-                await api('/account/password', 'POST', Object.fromEntries(f));
+                const result = await api('/account/password', 'POST', Object.fromEntries(f));
+                if(result.reauthenticate) { await app.refresh(); go('/entrar'); app.flash('Senha alterada. Entre novamente.'); }
               }}
             >
-              <Field
+              {app.data.config.authProvider !== 'supabase' && <Field
                 label="Senha atual"
                 name="current"
                 type="password"
                 required
                 autoComplete="current-password"
-              />
+              />}
               <Field
                 label="Nova senha"
                 name="password"
