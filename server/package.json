@@ -6,9 +6,12 @@
     "node": ">=24"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.116.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
     "multer": "^2.3.0",
-    "express-rate-limit": "^8.7.0"
+    "pg": "^8.23.0"
   }
 }
