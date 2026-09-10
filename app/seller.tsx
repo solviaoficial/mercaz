@@ -65,6 +65,7 @@ import {
 } from './shared';
 import { NeedAuth } from './buyer';
 import { ReviewList } from './catalog';
+import { ImportProducts } from './import-products';
 export function SellLanding() {
   const app = useApp();
   return (
@@ -242,6 +243,7 @@ const nav = [
   ['', 'Visão geral', LayoutDashboard],
   ['pedidos', 'Pedidos', Package],
   ['produtos', 'Produtos', Boxes],
+  ['importar', 'Importar produtos', Download],
   ['anuncio', 'Criar anúncio', Plus],
   ['estoque', 'Estoque e demanda', ChartNoAxesCombined],
   ['desempenho', 'Desempenho', ChartNoAxesCombined],
@@ -297,6 +299,8 @@ function SellerContent({ section, id }: any) {
           <Dashboard d={d} />
         ) : section === 'produtos' ? (
           <Products d={d} />
+        ) : section === 'importar' ? (
+          <ImportProducts />
         ) : section === 'anuncio' ? (
           <Listing d={d} id={id} reload={reload} />
         ) : section === 'pedidos' ? (
@@ -467,6 +471,7 @@ function Products({ d }: any) {
         title="Seu catálogo"
         sub={`${d.products.length} produtos. Você controla preço, disponibilidade e apresentação.`}
       >
+        <a className="btn secondary" href="/vendedor/importar"><Download size={16} />Importar produtos</a>
         <a className="btn" href="/vendedor/anuncio">
           <Plus size={16} />
           Novo anúncio

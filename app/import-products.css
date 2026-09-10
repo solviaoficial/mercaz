@@ -1,0 +1,281 @@
+.import-page {
+  min-width: 0;
+}
+.import-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.import-card h2 {
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+.import-card p {
+  line-height: 1.6;
+}
+.import-steps {
+  display: flex;
+  gap: 24px;
+  margin: 8px 0 28px;
+  flex-wrap: wrap;
+}
+.import-steps span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #696963;
+  font-size: 13px;
+}
+.import-steps b {
+  border-radius: 50%;
+  border: 1px solid #ddd9cd;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+.import-steps .current {
+  color: var(--primary);
+  font-weight: 700;
+}
+.import-steps .current b {
+  background: #f4edef;
+  border-color: #caa5b0;
+}
+.import-sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+.import-sources button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #d9d6cb;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: left;
+  background: #fff;
+}
+.import-sources .selected {
+  background: #f4edef;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.import-help {
+  display: flex;
+  gap: 14px;
+  background: #f6f5ee;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 22px 0;
+}
+.import-help svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.import-help p {
+  margin: 6px 0 0;
+}
+.import-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 30px 18px;
+  border: 2px dashed #cdb6bf;
+  border-radius: 12px;
+  background: #fcf9fa;
+  cursor: pointer;
+  text-align: center;
+}
+.import-drop span,
+.import-note {
+  color: #65655c;
+  font-size: 13px;
+}
+.import-drop input {
+  max-width: 100%;
+}
+.import-file-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+.import-file-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  overflow-wrap: anywhere;
+}
+.import-file-list span {
+  margin-left: auto;
+  color: #777;
+}
+.import-note {
+  line-height: 1.8;
+  margin: 0 0 25px;
+}
+.import-sheet {
+  border: 1px solid #e3e0d6;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.import-sheet summary {
+  cursor: pointer;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.import-sheet summary span {
+  font-weight: 400;
+  margin-left: 10px;
+  color: #777;
+}
+.import-check {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 20px 0;
+}
+.import-check input {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.import-map {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.import-map select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d8d6cb;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  min-width: 0;
+}
+.import-scroll {
+  width: 100%;
+  overflow: auto;
+  margin: 16px 0;
+}
+.import-scroll table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+.import-scroll th {
+  text-align: left;
+  background: #f5f4ef;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 12px;
+}
+.import-scroll td {
+  vertical-align: top;
+  padding: 12px;
+  border-bottom: 1px solid #eeece4;
+  min-width: 90px;
+  max-width: 340px;
+  overflow-wrap: anywhere;
+}
+.import-scroll td:first-child {
+  min-width: 190px;
+}
+.import-scroll td:last-child {
+  min-width: 240px;
+}
+.import-scroll small {
+  display: block;
+  color: #777;
+  margin: 7px 0;
+  font-size: 11px;
+}
+.import-scroll td p {
+  margin: 0 0 5px;
+}
+.import-scroll td a {
+  display: block;
+  text-decoration: underline;
+  margin-top: 8px;
+}
+.import-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.import-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+.import-metrics > div {
+  background: #f6f6f0;
+  border-radius: 10px;
+  padding: 18px;
+}
+.import-metrics strong {
+  display: block;
+  font-size: 26px;
+}
+.import-metrics span {
+  font-size: 12px;
+  color: #68685d;
+}
+.import-pagination,
+.import-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 22px 0 8px;
+}
+.import-pagination {
+  justify-content: space-between;
+  font-size: 13px;
+}
+.import-cancel {
+  font-size: 13px;
+  text-decoration: underline;
+  color: #775946;
+  margin: 0 0 25px;
+  text-align: left;
+}
+.import-page progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--primary);
+}
+.import-page button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 700px) {
+  .import-card {
+    padding: 16px;
+  }
+  .import-map {
+    grid-template-columns: 1fr;
+  }
+  .import-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .import-steps {
+    gap: 10px;
+  }
+  .import-steps span {
+    font-size: 11px;
+  }
+  .import-sources {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
