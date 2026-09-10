@@ -7,6 +7,7 @@ class Pool {
     this.ready=(async()=>{
       await this.db.exec('CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY);');
       await this.db.exec(readFileSync(new URL('../supabase/migrations/202609090001_mercaz.sql',import.meta.url),'utf8'));
+      await this.db.exec(readFileSync(new URL('../supabase/migrations/202609090002_product_imports.sql',import.meta.url),'utf8'));
       await this.db.exec('SET search_path=mercaz,public; SET timezone=UTC;');
     })();
   }
