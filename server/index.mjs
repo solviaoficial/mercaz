@@ -10,6 +10,7 @@ import { db, dataDir, one, all, run, hash, passwordHash, passwordOK, transaction
 import { seed } from './seed.mjs';
 import { supabaseAuth, supabaseSession, installAuth } from './auth.mjs';
 import { lockCheckout, lockOrder } from './db.mjs';
+import { installImports } from './imports.mjs';
 import { demo, feeBps, mp, encrypt, createPayment, syncPayment, cancelPayment, refundPayment, validSignature, reconcile, } from './payments.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const app = express();
@@ -106,6 +107,7 @@ const categories = [
     'Cozinha',
     'Esporte',
 ];
+export const stopImports = await installImports(app, { auth, seller });
 const pselect = `SELECT p.*,s.name store_name,s.prep_days,s.shipping,s.shipping_days,s.paused,COALESCE((SELECT AVG(rating) FROM reviews r WHERE r.product_id=p.id AND r.hidden=0),0) rating,(SELECT COUNT(*) FROM reviews r WHERE r.product_id=p.id AND r.hidden=0) review_count FROM products p JOIN stores s ON s.id=p.store_id`;
 const product = (p) => p
     ? { ...p, images: JSON.parse(p.images), variants: JSON.parse(p.variants) }
@@ -784,6 +786,7 @@ if (process.env.NO_LISTEN !== 'true') {
     const stop = () => {
         clearInterval(timer);
         server.close(async () => {
+            await stopImports();
             await db.close();
             process.exit(0);
         });
