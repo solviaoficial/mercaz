@@ -1,0 +1,31 @@
+name: Docker build and smoke test
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (includes application and PostgreSQL tests)
+        run: docker build -t mercaz:ci .
+      - name: Start application with isolated demo database
+        run: docker run -d --name mercaz-ci -p 127.0.0.1:3105:3000 -e AUTH_PROVIDER=local -e PAYMENT_MODE=demo -e SEED_DEMO=false mercaz:ci
+      - name: Verify container readiness
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3105/api/health; then
+              curl --fail --silent http://127.0.0.1:3105/ > /dev/null
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs mercaz-ci
+          exit 1
+      - name: Container logs
+        if: always()
+        run: docker logs mercaz-ci || true
